@@ -1,0 +1,32 @@
+# .github/workflows/ishtap_scraper.yml
+# İşTap — Gündəlik avtomatik scraper (GitHub Actions)
+# Hər gün Bakı vaxtı ilə 08:00-da işə düşür
+
+name: İşTap Hellojob Scraper
+
+on:
+  schedule:
+    - cron: "0 4 * * *"   # UTC 04:00 = Bakı 08:00 (UTC+4)
+  workflow_dispatch:        # Manual işə salma imkanı
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Kodu yüklə
+        uses: actions/checkout@v4
+
+      - name: Python qur (3.12)
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Asılılıqları yüklə
+        run: pip install requests beautifulsoup4 supabase
+
+      - name: Scraper-i işə sal
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+        run: python ishtap_scraper.py
