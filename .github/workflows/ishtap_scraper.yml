@@ -1,10 +1,10 @@
 # .github/workflows/ishtap_scraper.yml
-name: İşTap Robust Scraper
+name: İşTap Scraper
 
 on:
   schedule:
-    - cron: "0 4 * * *"   # UTC 04:00 = Bakı 08:00 (UTC+4)
-  workflow_dispatch:
+    - cron: "0 4 * * *"   # Hər gün saat 08:00 Bakı vaxtı (UTC+4)
+  workflow_dispatch:        # Manual işə salma
 
 jobs:
   scrape:
@@ -17,12 +17,10 @@ jobs:
           python-version: "3.12"
 
       - name: Asılılıqları yüklə
-        run: |
-          pip install requests beautifulsoup4 supabase google-generativeai
+        run: pip install requests beautifulsoup4 lxml supabase
 
       - name: Scraper-i işə sal
         env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-          SUPABASE_URL:   ${{ secrets.SUPABASE_URL }}
-          SUPABASE_KEY:   ${{ secrets.SUPABASE_KEY }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
         run: python ishtap_scraper.py
